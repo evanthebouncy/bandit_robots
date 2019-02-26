@@ -11,7 +11,10 @@ for m in mm:
 M = np.array(M)
 
 M_train = M[:400]
-M_test  = M[100:]
+M_test  = M[400:]
+
+print ("processed train / test split ")
+print (len(M_train), len(M_test))
 
 def gen_train_input(x):
     row_pad = np.ones(x.shape)
