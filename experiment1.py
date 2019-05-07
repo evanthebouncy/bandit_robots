@@ -16,3 +16,8 @@ for test_row in M_test:
 
 print ("average tries until finding max ")
 print (sum(ro_lengths) / len(ro_lengths))
+to_save = sum(ro_lengths) / len(ro_lengths)
+
+import pickle
+pickle.dump(to_save, open("result.p", "wb"))
+
