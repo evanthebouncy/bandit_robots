@@ -10,12 +10,29 @@ gcloud compute --project=capgroup instances create {instance_name} --zone=us-eas
     """
     return ret
 
-def run_remote_cmd(folder_path, script_path):
+def run_remote_cmd(instance_name, folder_path, script_path):
+    """
+    instance_name : instance-1
+    folder_path : home/yewenpu/embedded_prototype/
+    script_path : ./scripts/run.sh
+    """
     ret = \
     f"""
-gcloud compute ssh --zone=us-east1-b yewenpu@instance-1 --command='cd {folder_path}; git pull; chmod 777 {script_path}; {script_path} '
+gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='cd {folder_path}; git pull; chmod 777 {script_path}; {script_path}'
+    """
+    return ret
+
+def start_up_remove(instance_name):
+    f"""
+gcloud compute instances start {instance_name}
 
     """
+
+def shut_off_remote(instance_name):
+    f"""
+gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='sudo poweroff'
+    """
+    return ret
 
 if __name__ == "__main__":
     snapshot_name = "snapshot-test-pytorch1"
@@ -24,3 +41,5 @@ if __name__ == "__main__":
 
     folder_path = "/home/yewenpu/bandit_robots"
     script_path = "./scripts/run.sh" 
+    run_experiment = run_remote_cmd(folder_path, script_path)
+    os.system(run_experiment)
