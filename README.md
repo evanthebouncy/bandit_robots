@@ -21,14 +21,14 @@ First, make sure the code can be run over a small-scale instance locally, i.e. o
 Second, turn the full-scale running process into a python script (of diff
 arguments in case of multiple cases), experiment.py and run\_experiment.sh (holds arguments only)
 
-Add the python script to the git repo
+Add the python script and shell script to the git repo
 
 Use launch.py to boot up remove machine, which will do the following :
 
 * pull github to get the python script
-* run the full-scale experiment specified by python script, with specific arguments in runexperiment.py
-* result stored as a special pickle specified by python script, the pickle contains meta-data on how its ran
-* add and push the result to github
+* run the full-scale experiment specified by python and shell script, with specific arguments in runexperiment.sh
+* result stored as a special pickle specified by python script, the pickle contains text of runexperiment.sh so we know what it is
+* add and push the result to github, timestamped so it will never have merge conflict
 * remote machine commit suicide to save us money
 
 # The Local Machine

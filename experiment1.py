@@ -18,6 +18,15 @@ print ("average tries until finding max ")
 print (sum(ro_lengths) / len(ro_lengths))
 to_save = sum(ro_lengths) / len(ro_lengths)
 
+import datetime
+time_stamp = "".join(str(datetime.datetime.now()).split())
+result_path = f"results/avgtime_{time_stamp}.p"
 import pickle
-pickle.dump(to_save, open("result.p", "wb"))
+pickle.dump(to_save, open(result_path, "wb"))
+
+# save the results
+from scripts.launch import upload
+import os
+upload_script = upload(result_path)
+os.system(upload_script)
 

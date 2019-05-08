@@ -36,8 +36,8 @@ gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='sudo pow
 def upload(file_path):
     return f"""
 git pull
-git add {file_name}
-git commit -m "added {file_name}"
+git add {file_path}
+git commit -m "added {file_path}"
 git push
     """
 
@@ -48,5 +48,5 @@ if __name__ == "__main__":
 
     folder_path = "/home/yewenpu/bandit_robots"
     script_path = "./scripts/run.sh" 
-    run_experiment = run_remote_cmd(folder_path, script_path)
+    run_experiment = run_remote_cmd(instance_name, folder_path, script_path)
     os.system(run_experiment)
