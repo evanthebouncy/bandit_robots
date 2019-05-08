@@ -20,7 +20,7 @@ to_save = sum(ro_lengths) / len(ro_lengths)
 
 import datetime
 time_stamp = "".join(str(datetime.datetime.now()).split())
-result_path = f"results/avgtime_{time_stamp}.p"
+result_path = "results/avgtime_+"time_stamp+".p"
 import pickle
 pickle.dump(to_save, open(result_path, "wb"))
 
