@@ -23,16 +23,23 @@ gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='cd {fold
     return ret
 
 def start_up_remove(instance_name):
-    f"""
+    return f"""
 gcloud compute instances start {instance_name}
 
     """
 
 def shut_off_remote(instance_name):
-    f"""
+    return f"""
 gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='sudo poweroff'
     """
-    return ret
+
+def upload(file_path):
+    return f"""
+git pull
+git add {file_name}
+git commit -m "added {file_name}"
+git push
+    """
 
 if __name__ == "__main__":
     snapshot_name = "snapshot-test-pytorch1"

@@ -19,7 +19,7 @@ There are 3 major players in the computation process of running on google
 First, make sure the code can be run over a small-scale instance locally, i.e. only 1% of the total data
 
 Second, turn the full-scale running process into a python script (of diff
-arguments in case of multiple cases), experiment.py and run\_experiment.py (holds arguments only)
+arguments in case of multiple cases), experiment.py and run\_experiment.sh (holds arguments only)
 
 Add the python script to the git repo
 
@@ -43,6 +43,7 @@ all results hold meta-data of the commands used to run them so there is no confu
 # Remote Machine
 * Should be an image that holds the "essential" big data that cannot be stored on github
 * Other than that everything should be temporary and assumed to destroyed after running
+* before dying store a unique pickle result of some form onto github
 
 # GitHub
 Communication protocol of persistent information across the computes, i.e. epxeriment.py and the result of the experiments
