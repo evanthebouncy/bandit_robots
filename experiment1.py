@@ -27,7 +27,7 @@ pickle.dump(to_save, open(result_path, "wb"))
 def upload(file_path):
     ret =  "git pull\n"
     ret += "git add "+file_path+"\n"
-    ret += "git commit -m added result \n"
+    ret += "git commit -m \"added result\" \n"
     ret += "git push\n"
     return ret
 
