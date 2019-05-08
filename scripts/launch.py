@@ -33,13 +33,6 @@ def shut_off_remote(instance_name):
 gcloud compute ssh --zone=us-east1-b yewenpu@{instance_name} --command='sudo poweroff'
     """
 
-def upload(file_path):
-    return f"""
-git pull
-git add {file_path}
-git commit -m "added {file_path}"
-git push
-    """
 
 if __name__ == "__main__":
     snapshot_name = "snapshot-test-pytorch1"

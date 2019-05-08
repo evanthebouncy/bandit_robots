@@ -24,8 +24,12 @@ result_path = "results/avgtime_"+time_stamp+".p"
 import pickle
 pickle.dump(to_save, open(result_path, "wb"))
 
-# save the results
-from scripts.launch import upload
+def upload(file_path):
+    ret =  "git pull\n"
+    ret += "git add "+file_path+"\n"
+    ret += "git commit -m added result \n"
+    ret += "git push\n"
+
 import os
 upload_script = upload(result_path)
 os.system(upload_script)
