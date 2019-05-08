@@ -34,6 +34,6 @@ def upload(file_path):
 import os
 upload_script = upload(result_path)
 print ("runing upload script")
-print (uplload_script)
+print (upload_script)
 os.system(upload_script)
 
