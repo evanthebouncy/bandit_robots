@@ -29,6 +29,7 @@ def upload(file_path):
     ret += "git add "+file_path+"\n"
     ret += "git commit -m added result \n"
     ret += "git push\n"
+    return ret
 
 import os
 upload_script = upload(result_path)
