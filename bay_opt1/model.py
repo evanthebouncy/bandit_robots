@@ -151,7 +151,7 @@ if __name__ == '__main__':
     print (sig)
 
     for i in tqdm(range(100000)):
-        n_obs = random.choice(list(range(10,20)))
+        n_obs = random.choice(list(range(1,20)))
         xx,yy,xx_new,yy_new = gen_batch_data(n_obs, 100)
         loss = compl.learn_once(xx, yy, xx_new, yy_new)
 
