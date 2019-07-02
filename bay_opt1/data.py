@@ -1,11 +1,11 @@
 import numpy as np
 
-M = 4
-W_RNG = (0.2, 0,4)
+M = 2
+W_RNG = (0.4, 0.6)
 
 def gen_params():
     def gen_peak():
-        peak = np.random.random((2,))
+        peak = np.random.random(), np.random.uniform(0.5, 1.0)
         widths = np.random.uniform(low=W_RNG[0], high=W_RNG[1], size=2)
         def f(x):
             peak_x, peak_y = peak
@@ -13,17 +13,17 @@ def gen_params():
             if x < peak_x:
                 base_x = peak_x - w_1
                 slope = peak_y / w_1
-                return max(0, (x - base_x) * slope)
+                return max(0, slope * (x - base_x)**3)
             if x >= peak_x:
                 base_x = peak_x + w_2
                 slope = -peak_y / w_2
-                return max(0, (x - base_x) * slope)
+                return max(0, slope * (x - base_x)**3)
         return f
 
     peaks = [gen_peak() for _ in range(M)]
 
     def max_peak(x):
-        return max([peak(x) for peak in peaks])
+        return sum([peak(x) for peak in peaks])
 
     return max_peak
 
@@ -52,13 +52,13 @@ def to_positional(x_batch):
     return np.transpose(x_enc, (1, 2, 0))
 
 if __name__ == '__main__':
-    # ff = gen_params()
+    ff = gen_params()
 
-    # import matplotlib.pyplot as plt
-    # plt.plot([ff(x) for x in np.linspace(0.0, 1.0, 100)])
-    # plt.ylabel('some numbers')
-    # plt.show()
+    import matplotlib.pyplot as plt
+    plt.plot([ff(x) for x in np.linspace(0.0, 1.0, 100)])
+    plt.ylabel('some numbers')
+    plt.savefig('ha.png')
 
-    xx, _, _, _ = gen_batch_data(5, 10)
-    print (to_positional(xx).shape)
+    # xx, _, _, _ = gen_batch_data(5, 10)
+    # print (to_positional(xx).shape)
 
