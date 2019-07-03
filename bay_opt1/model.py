@@ -11,15 +11,15 @@ from tqdm import tqdm
 from data import gen_batch_data, to_positional
 
 if torch.cuda.is_available():
-  def to_torch(x, dtype, req = False):
-    tor_type = torch.cuda.LongTensor if dtype == "int" else torch.cuda.FloatTensor
-    x = Variable(torch.from_numpy(x).type(tor_type), requires_grad = req)
-    return x
+    def to_torch(x, dtype, req = False):
+        tor_type = torch.cuda.LongTensor if dtype == "int" else torch.cuda.FloatTensor
+        x = Variable(torch.from_numpy(x).type(tor_type), requires_grad = req)
+        return x
 else:
-  def to_torch(x, dtype, req = False):
-    tor_type = torch.LongTensor if dtype == "int" else torch.FloatTensor
-    x = Variable(torch.from_numpy(x).type(tor_type), requires_grad = req)
-    return x
+    def to_torch(x, dtype, req = False):
+        tor_type = torch.LongTensor if dtype == "int" else torch.FloatTensor
+        x = Variable(torch.from_numpy(x).type(tor_type), requires_grad = req)
+        return x
 
 
 class Compl(nn.Module):
@@ -84,7 +84,7 @@ class Compl(nn.Module):
         nodes_enc = input_enc + [output_enc]
 
         # step2: serveral rounds of msg passing
-        for i in range(4):
+        for i in range(1):
             nodes_enc = self.communicate(nodes_enc)
 
         agg, _ = torch.max(torch.stack(nodes_enc), dim=0)
@@ -105,10 +105,11 @@ class Compl(nn.Module):
 
     # the loss is negative of the log probability . . . which is . . . 
     def loss_function(self, y, mu, sig):
-        m = Normal(mu, sig)
-        nll = -m.log_prob(y)
-        loss = torch.sum(nll)
-        return loss
+        return torch.sum((y-mu)**2)
+    #m = Normal(mu, sig)
+    #    nll = -m.log_prob(y)
+    #    loss = torch.sum(nll)
+    #    return loss
 
     def learn_once(self, xx, yy, xx_new, yy_new):
         self.opt.zero_grad()
