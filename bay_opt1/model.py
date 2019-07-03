@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 from torch.distributions.normal import Normal
 from tqdm import tqdm
 
+from data import gen_batch_data, to_positional
+
 if torch.cuda.is_available():
   def to_torch(x, dtype, req = False):
     tor_type = torch.cuda.LongTensor if dtype == "int" else torch.cuda.FloatTensor
@@ -98,7 +100,7 @@ class Compl(nn.Module):
         yy = to_torch(yy, "float")
         xx_pos_new = to_torch(xx_pos_new, "float")
 
-        mu, sig = compl(xx_pos, yy, xx_pos_new)
+        mu, sig = self(xx_pos, yy, xx_pos_new)
         return mu, sig
 
     # the loss is negative of the log probability . . . which is . . . 
@@ -129,7 +131,6 @@ class Compl(nn.Module):
 
 
 if __name__ == '__main__':
-    from data import gen_batch_data, to_positional
 
     compl = Compl(100).cuda()
     xx,yy,xx_new,yy_new = gen_batch_data(5, 10)
@@ -150,7 +151,7 @@ if __name__ == '__main__':
     print (mu)
     print (sig)
 
-    for i in tqdm(range(100000)):
+    for i in tqdm(range(1000000)):
         n_obs = random.choice(list(range(1,20)))
         xx,yy,xx_new,yy_new = gen_batch_data(n_obs, 100)
         loss = compl.learn_once(xx, yy, xx_new, yy_new)

@@ -13,11 +13,11 @@ def gen_params():
             if x < peak_x:
                 base_x = peak_x - w_1
                 slope = peak_y / w_1
-                return max(0, slope * (x - base_x)**3)
+                return max(0, slope * (x - base_x))
             if x >= peak_x:
                 base_x = peak_x + w_2
                 slope = -peak_y / w_2
-                return max(0, slope * (x - base_x)**3)
+                return max(0, slope * (x - base_x))
         return f
 
     peaks = [gen_peak() for _ in range(M)]
@@ -27,8 +27,9 @@ def gen_params():
 
     return max_peak
 
-def gen_data(n_pts):
-    peaks = gen_params()
+def gen_data(n_pts, peaks=None):
+    if peaks is None:
+        peaks = gen_params()
     samples = np.random.random((n_pts + 1,))
     input_x = samples[:-1]
     input_y = np.array([peaks(x) for x in input_x])
