@@ -4,11 +4,7 @@ from torch.autograd import Variable
 import numpy as np
 import torch.nn.functional as F
 import random
-import matplotlib.pyplot as plt
-from torch.distributions.normal import Normal
 from tqdm import tqdm
-
-from data import gen_batch_data, to_positional
 
 if torch.cuda.is_available():
     def to_torch(x, dtype, req = False):
@@ -23,36 +19,30 @@ else:
 
 
 class Compl(nn.Module):
-    def __init__(self, n_hidden):
+    def __init__(self):
         super(Compl, self).__init__()
 
-        self.n_hidden = n_hidden
+        n_hidden = 100
 
-        self.A2N = nn.Linear(1, n_hidden)
-        self.fc_mu = nn.Linear(n_hidden, 1)
+        self.fc1 = nn.Linear(1, n_hidden)
+        self.fc2 = nn.Linear(n_hidden, 1)
 
-        self.opt = torch.optim.SGD(self.parameters(), lr=1e-5)
+        self.opt = torch.optim.Adam(self.parameters(), lr=1e-5)
 
-    def forward(self, input_yy):
-        input_yy = input_yy.unsqueeze(-1)
-        agg =  nn.LeakyReLU()(self.A2N(input_yy))
-        return self.fc_mu(agg)
+    def forward(self, yy):
+        yy = yy.unsqueeze(-1)
+        h =  nn.LeakyReLU()(self.fc1(yy))
+        return self.fc2(h)
 
-    def predict(self, yy):
-        mu = self(yy)
-        return mu
+    def loss_function(self, y, y_pred):
+        return torch.sum((y - y_pred.squeeze()) ** 2)
 
-    # the loss is negative of the log probability . . . which is . . . 
-    def loss_function(self, y, mu):
-        return torch.sum((y - mu) ** 2)
-
-    def learn_once(self, yy, yy_new):
+    def learn_once(self, yy):
         yy = to_torch(yy, "float")
-        yy_new = to_torch(yy_new, "float")
 
         self.opt.zero_grad()
-        mu = self.predict(yy)
-        loss = self.loss_function(yy_new, mu)
+        yy_pred = self(yy)
+        loss = self.loss_function(yy, yy_pred)
         loss.backward()
         self.opt.step()
 
@@ -69,23 +59,17 @@ class Compl(nn.Module):
 
 if __name__ == '__main__':
 
-    compl = Compl(100).cuda()
+    compl = Compl().cuda()
 
     for i in tqdm(range(1000000)):
-        n_obs = random.choice(list(range(1,20)))
-        xx,yy,xx_new,yy_new = gen_batch_data(n_obs, 100)
-        yy = yy[:,0]
-        yy_new = yy_new
-        loss = compl.learn_once(yy, yy_new)
+        yy = np.random.random((100,))
+        loss = compl.learn_once(yy)
 
-        if i % 100 == 0:
-            compl.save("./saved_models/ver1.mdl")
+        if i % 1000 == 0:
             print ("------------------------------")
-            print ("number observations ", n_obs)
+            yy_pred = compl(to_torch(yy, "float"))
             print ("loss ", loss)
-            mu = compl.predict(to_torch(yy, "float"))
-            print ("y0: ", yy[0])
-            print ("mu: ", mu[0])
-            print ("y*: ", yy_new[0])
+            print ("yy_pred ", yy_pred[0])
+            print ("yy ", yy[0])
 
 

@@ -1,8 +1,8 @@
 import numpy as np
 
 M = 1
-# W_RNG = (0.4, 0.6)
-W_RNG = (100, 101)
+W_RNG = (0.4, 0.6)
+# W_RNG = (100, 101)
 
 def gen_params():
     def gen_peak():
@@ -52,6 +52,10 @@ def gen_batch_data(n_pts, n_batch):
 def to_positional(x_batch):
     x_enc = np.array([ np.cos(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
     return np.transpose(x_enc, (1, 2, 0))
+
+def plot_peak(peak_f, name):
+    plt.plot([ff(x) for x in np.linspace(0.0, 1.0, 100)])
+    plt.savefig(name)
 
 if __name__ == '__main__':
     ff = gen_params()
