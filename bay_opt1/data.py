@@ -56,11 +56,14 @@ def to_positional(x_batch):
 if __name__ == '__main__':
     ff = gen_params()
 
+
     import matplotlib.pyplot as plt
     plt.plot([ff(x) for x in np.linspace(0.0, 1.0, 100)])
     plt.ylabel('some numbers')
     plt.savefig('ha.png')
 
-    # xx, _, _, _ = gen_batch_data(5, 10)
+    xx, yy, xx_new, yy_new = gen_batch_data(5, 10)
+    print (yy[0])
+    print (yy_new[0])
     # print (to_positional(xx).shape)
 
