@@ -1,11 +1,12 @@
 import numpy as np
 
-M = 2
-W_RNG = (0.4, 0.6)
+M = 1
+# W_RNG = (0.4, 0.6)
+W_RNG = (100, 101)
 
 def gen_params():
     def gen_peak():
-        peak = np.random.random(), np.random.uniform(0.5, 1.0)
+        peak = np.random.random(), np.random.uniform(0.1, 1.0)
         widths = np.random.uniform(low=W_RNG[0], high=W_RNG[1], size=2)
         def f(x):
             peak_x, peak_y = peak
