@@ -28,11 +28,11 @@ class Compl(nn.Module):
 
         self.n_hidden = n_hidden
 
-        # going from 4 positional enc, 1 value, 5 to n_hidden
-        self.fc1 = nn.Linear(4 + 1, n_hidden)
+        # going from 8 positional enc, 1 value, 5 to n_hidden
+        self.fc1 = nn.Linear(8 + 1, n_hidden)
         self.fc2 = nn.Linear(n_hidden, n_hidden)
 
-        self.enc_new_x = nn.Linear(4, n_hidden)
+        self.enc_new_x = nn.Linear(8, n_hidden)
 
         self.Q = nn.Linear(n_hidden, n_hidden)
         self.K = nn.Linear(n_hidden, n_hidden)
@@ -88,7 +88,7 @@ class Compl(nn.Module):
             nodes_enc = self.communicate(nodes_enc)
 
         agg, _ = torch.max(torch.stack(nodes_enc), dim=0)
-        mu, sig = self.fc_mu(agg), self.fc_sig(agg)**2
+        mu, sig = self.fc_mu(agg), self.fc_sig(agg)**2+0.001
         return mu, sig
 
     def predict(self, xx, yy, xx_new):
@@ -105,11 +105,12 @@ class Compl(nn.Module):
 
     # the loss is negative of the log probability . . . which is . . . 
     def loss_function(self, y, mu, sig):
+        mu, sig = mu.squeeze(-1), sig.squeeze(-1)
+        m = Normal(mu, sig)
+        nll = -m.log_prob(y)
+        loss = torch.sum(nll)
+        return loss
         return torch.sum((y-mu)**2)
-    #m = Normal(mu, sig)
-    #    nll = -m.log_prob(y)
-    #    loss = torch.sum(nll)
-    #    return loss
 
     def learn_once(self, xx, yy, xx_new, yy_new):
         self.opt.zero_grad()

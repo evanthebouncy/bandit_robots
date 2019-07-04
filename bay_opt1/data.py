@@ -1,12 +1,12 @@
 import numpy as np
 
-M = 1
-W_RNG = (0.4, 0.6)
+M = 3
+W_RNG = (0.2, 0.4)
 # W_RNG = (100, 101)
 
 def gen_params():
     def gen_peak():
-        peak = np.random.random(), np.random.uniform(0.1, 1.0)
+        peak = np.random.random(), 1.0
         widths = np.random.uniform(low=W_RNG[0], high=W_RNG[1], size=2)
         def f(x):
             peak_x, peak_y = peak
@@ -50,7 +50,9 @@ def gen_batch_data(n_pts, n_batch):
     return np.array(input_xx), np.array(input_yy), np.array(output_xx), np.array(output_yy)
 
 def to_positional(x_batch):
-    x_enc = np.array([ np.cos(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
+    x_cos_enc = np.array([ np.cos(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
+    x_sin_enc = np.array([ np.sin(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
+    x_enc = np.concatenate((x_cos_enc, x_sin_enc))
     return np.transpose(x_enc, (1, 2, 0))
 
 def plot_peak(peak_f, name):

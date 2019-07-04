@@ -29,10 +29,10 @@ class Compl(nn.Module):
         self.n_hidden = n_hidden
 
         # going from 4 positional enc, 1 value, 5 to n_hidden
-        self.fc1 = nn.Linear(4 + 1, n_hidden)
+        self.fc1 = nn.Linear(8 + 1, n_hidden)
         self.fc2 = nn.Linear(n_hidden, n_hidden)
 
-        self.enc_new_x = nn.Linear(4, n_hidden)
+        self.enc_new_x = nn.Linear(8, n_hidden)
 
         self.relate = nn.Linear(n_hidden + n_hidden, n_hidden)
 
