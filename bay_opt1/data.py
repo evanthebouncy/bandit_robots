@@ -8,6 +8,7 @@ def gen_params():
     def gen_peak():
         peak = np.random.random(), 1.0
         widths = np.random.uniform(low=W_RNG[0], high=W_RNG[1], size=2)
+
         def f(x):
             peak_x, peak_y = peak
             w_1, w_2 = widths
@@ -49,6 +50,30 @@ def gen_batch_data(n_pts, n_batch):
 
     return np.array(input_xx), np.array(input_yy), np.array(output_xx), np.array(output_yy)
 
+def gen_max_data(n_pts, peaks=None):
+    if peaks is None:
+        peaks = gen_params()
+    input_x = np.random.random((n_pts,))
+    input_y = np.array([peaks(x) for x in input_x])
+    dense_x = np.linspace(0, 1, 100)[:-1] + np.random.random() / 100
+    max_x = max([(peaks(xx),xx) for xx in dense_x])[1]
+    return input_x, input_y, max_x
+
+def gen_max_batch_data(n_pts, n_batch):
+    input_xx, input_yy, qry_max_xx, is_max_xx = [],[],[],[]
+    for i in range(n_batch):
+        a,b,c = gen_max_data(n_pts)
+        input_xx.append(a)
+        input_yy.append(b)
+        if np.random.random() < 0.5:
+            qry_max_xx.append(c)
+            is_max_xx.append(1)
+        else:
+            qry_max_xx.append(np.random.random())
+            is_max_xx.append(0)
+    return np.array(input_xx), np.array(input_yy), np.array(qry_max_xx), np.array(is_max_xx)
+
+
 def to_positional(x_batch):
     x_cos_enc = np.array([ np.cos(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
     x_sin_enc = np.array([ np.sin(k * 2 * np.pi * x_batch) for k in [1,2,3,4] ])
@@ -73,3 +98,9 @@ if __name__ == '__main__':
     print (yy_new[0])
     # print (to_positional(xx).shape)
 
+    xx, yy, max_x = gen_max_data(10)
+    print (xx)
+    print (yy)
+    print (max_x)
+
+    gen_max_batch_data(8, 10)
