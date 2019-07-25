@@ -84,11 +84,11 @@ class Compl(nn.Module):
         nodes_enc = input_enc + [output_enc]
 
         # step2: serveral rounds of msg passing
-        for i in range(8):
+        for i in range(4):
             nodes_enc = self.communicate(nodes_enc)
 
         agg, _ = torch.max(torch.stack(nodes_enc), dim=0)
-        mu, sig = self.fc_mu(agg), self.fc_sig(agg)**2+0.001
+        mu, sig = self.fc_mu(agg), self.fc_sig(agg)**2+0.01
         return mu, sig
 
     def predict(self, xx, yy, xx_new):
@@ -130,6 +130,11 @@ class Compl(nn.Module):
         self.load_state_dict(torch.load(loc))
 
 
+def valuate_model(some_model, val_set):
+    loss = 0
+    for xx, yy, xx_new, yy_new in val_set:
+        loss += some_model.learn_once(xx, yy, xx_new, yy_new)
+    return loss.detach().cpu().squeeze().numpy()
 
 
 if __name__ == '__main__':
@@ -148,18 +153,19 @@ if __name__ == '__main__':
     # yy = to_torch(yy, "float")
     # xx_pos_new = to_torch(xx_pos_new, "float")
     # yy_new = to_torch(yy_new, "float")
+    validation_set = [gen_batch_data(n_obs, 100) for n_obs in range(1,20)]
 
     mu, sig = compl.predict(xx, yy, xx_new)
     print (mu)
     print (sig)
 
+    best_val_loss = 99999999999
     for i in tqdm(range(1000000)):
         n_obs = random.choice(list(range(1,20)))
         xx,yy,xx_new,yy_new = gen_batch_data(n_obs, 100)
         loss = compl.learn_once(xx, yy, xx_new, yy_new)
 
-        if i % 100 == 0:
-            compl.save("./saved_models/ver1.mdl")
+        if i % 1000 == 0:
             print ("------------------------------")
             print ("number observations ", n_obs)
             print ("loss ", loss)
@@ -167,5 +173,11 @@ if __name__ == '__main__':
             print ("mu: ", mu[0])
             print ("std: ", sig[0])
             print ("y*: ", yy_new[0])
+
+            evaluation_loss = valuate_model(compl, validation_set)
+            if evaluation_loss < best_val_loss:
+                compl.save("./saved_models/ver1.mdl")
+                best_val_loss = evaluation_loss
+                print ("saved a better model !")
 
 
