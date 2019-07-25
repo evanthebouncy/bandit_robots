@@ -45,6 +45,7 @@ def active_sample(compl, peaks):
             x_idx = int(x * len(mu))
             sig[x_idx] = 0
         most_confuse = np.argmax(sig) / len(sig)
+        most_confuse = np.random.random()
         yy_new = peaks(most_confuse)
         xx = np.array(list(xx) + [most_confuse])
         yy = np.array(list(yy) + [yy_new])
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     compl = Compl(100).cuda()
     compl.load('./saved_models/ob1.mdl')
 
-    # peaks = gen_XrXp()
-    peaks = make_Xr(gen_params())
+    peaks = gen_XrXp()
+    # peaks = make_Xr(gen_params())
     xxs, yys = active_sample(compl, peaks)
     iterative_plot(peaks, xxs, yys)
