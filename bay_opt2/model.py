@@ -178,6 +178,6 @@ if __name__ == '__main__':
             if evaluation_loss < best_val_loss:
                 compl.save("./saved_models/ver1.mdl")
                 best_val_loss = evaluation_loss
-                print ("saved a better model !")
+                print (f"saved a better model ! {best_val_loss}")
 
 

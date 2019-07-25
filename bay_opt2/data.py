@@ -6,7 +6,6 @@ import random
 def gen_data(n_pts, peaks=None):
     if peaks is None:
         peaks = gen_XrXp()
-        peaks = make_Xr(gen_params())
     samples = np.random.random((n_pts + 1,))
     input_x = samples[:-1]
     input_y = np.array([peaks(x) for x in input_x])
