@@ -41,6 +41,9 @@ class Compl(nn.Module):
         self.QK = nn.Linear(n_hidden + n_hidden, 1)
         self.A2N = nn.Linear(n_hidden, n_hidden)
 
+        self.bn1 = nn.BatchNorm1d(num_features=n_hidden)
+
+
 
         self.fc_mu = nn.Linear(n_hidden, 1)
         self.fc_sig = nn.Linear(n_hidden, 1)
@@ -60,7 +63,7 @@ class Compl(nn.Module):
             qk_weights = [(self.QK(qk)).squeeze(-1) for qk in qks]
             qk_w = F.softmax(torch.stack(qk_weights).transpose(0,1), dim=1)
             aggre = torch.sum(qk_w.unsqueeze(2).repeat(1,1,self.n_hidden) * vv, dim=1)
-            node_new = F.relu(self.A2N(aggre)) 
+            node_new = F.relu(self.bn1(self.A2N(aggre)))
             ret.append(node_new)
         return ret
 
