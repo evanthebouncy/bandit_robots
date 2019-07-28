@@ -48,7 +48,7 @@ class Compl(nn.Module):
         self.fc_mu = nn.Linear(n_hidden, 1)
         self.fc_sig = nn.Linear(n_hidden, 1)
 
-        self.opt = torch.optim.RMSprop(self.parameters(), lr=1e-3)
+        self.opt = torch.optim.RMSprop(self.parameters(), lr=1e-4)
 
     def communicate(self, nodes):
         nn = len(nodes)
