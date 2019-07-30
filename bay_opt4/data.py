@@ -12,6 +12,8 @@ def gen_data(n_pts, peaks=None):
     output_x = np.random.normal(samples[-1])
     if not (0 < output_x < 1):
         output_x = samples[-1] + 0.01 * (random.random() - 0.5)
+
+    output_x = np.random.random()
     output_y = peaks(output_x)
     return input_x, input_y, output_x, output_y
 
