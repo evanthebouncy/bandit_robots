@@ -87,7 +87,7 @@ class Compl(nn.Module):
         nodes_enc = input_enc + [output_enc]
 
         # step2: serveral rounds of msg passing
-        for i in range(4):
+        for i in range(3):
             nodes_enc = self.communicate(nodes_enc)
 
         agg, _ = torch.max(torch.stack(nodes_enc), dim=0)
@@ -121,6 +121,9 @@ class Compl(nn.Module):
         mu, sig = self.predict(xx, yy, xx_new)
         yy_new = to_torch(yy_new, "float")
         loss = self.loss_function(yy_new, mu, sig)
+
+        # do some gradient clipping to be safe
+        torch.nn.utils.clip_grad_norm_(self.parameters(), 2)
 
         loss.backward()
         self.opt.step()
