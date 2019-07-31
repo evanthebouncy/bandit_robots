@@ -9,11 +9,11 @@ def gen_data(n_pts, peaks=None):
     samples = np.random.random((n_pts,))
     input_x = samples
     input_y = np.array([peaks(x) for x in input_x])
-    output_x = np.random.normal(samples[-1])
-    if not (0 < output_x < 1):
-        output_x = samples[-1] + 0.01 * (random.random() - 0.5)
+    output_x = -1
+    while not (0 < output_x < 1):
+        output_x = np.random.normal(samples[-1], scale=0.5)
 
-    output_x = np.random.random()
+    # output_x = np.random.random()
     output_y = peaks(output_x)
     return input_x, input_y, output_x, output_y
 
@@ -53,9 +53,11 @@ def gen_max_batch_data(n_pts, n_batch):
 
 
 def to_positional(x_batch):
-    sin_range = range(1, 9)
-    x_sin_enc = np.array([ np.sin(k * (2-0.1) * np.pi * x_batch) for k in sin_range ])
-    return np.transpose(x_sin_enc, (1, 2, 0))
+    period = 2 - 0.1
+    x_cos_enc = np.array([ np.cos(k * period * np.pi * x_batch) for k in [1,2,3,4] ])
+    x_sin_enc = np.array([ np.sin(k * period * np.pi * x_batch) for k in [1,2,3,4] ])
+    x_enc = np.concatenate((x_cos_enc, x_sin_enc))
+    return np.transpose(x_enc, (1, 2, 0))
 
 if __name__ == '__main__':
     d_obs = gen_batch_data(8, 10)

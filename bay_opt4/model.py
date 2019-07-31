@@ -91,7 +91,7 @@ class Compl(nn.Module):
             nodes_enc = self.communicate(nodes_enc)
 
         agg, _ = torch.max(torch.stack(nodes_enc), dim=0)
-        mu, sig = self.fc_mu(agg), self.fc_sig(agg)**2+0.01
+        mu, sig = self.fc_mu(agg), 1 / (torch.abs(self.fc_sig(agg))+1.0)
         return mu, sig
 
     def predict(self, xx, yy, xx_new):

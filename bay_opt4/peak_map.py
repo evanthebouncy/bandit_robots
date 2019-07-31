@@ -38,10 +38,15 @@ def make_Xp(params):
 
 def join_world(xr, xp):
     def f(x):
+        if not (0 <= x <= 1):
+            assert 0, "cmon ur out of range"
         if x  < 0.5:
-            return xr(2 * x)
+            ret = xr(2 * x)
         else:
-            return xp(2 * (x - 0.5))
+            ret = xp(2 * (x - 0.5))
+
+        assert abs(ret) < 10, "something wrong "+str(ret)
+        return ret
     return f
 
 def plot_peak(peak_f, name):
