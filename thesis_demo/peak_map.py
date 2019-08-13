@@ -51,6 +51,9 @@ def gen_XrXp():
     Xr = make_Xr(params)
     Xp = make_Xp(params)
     XrXp = join_world(Xr, Xp)
+    return XrXp
+
+def center_XrXp(XrXp):
     avgg = np.mean([XrXp(x) for x in np.linspace(0.0, 1.0, 1000)])
     return lambda x: XrXp(x) - avgg
 

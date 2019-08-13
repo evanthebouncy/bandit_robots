@@ -5,7 +5,7 @@ from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
 
 import numpy as np
 import matplotlib.pyplot as plt
-from peak_map import gen_XrXp
+from peak_map import gen_XrXp, center_XrXp
 GPK = RBF(0.5, (0.01, 0.1))
 
 def plot_all(name, peaks, mu, sig, xx, yy):
@@ -51,6 +51,7 @@ def ucb(peaks, mu_sig_infer):
 
 if __name__ == '__main__':
     peaks = gen_XrXp()
+    peaks_center = center_XrXp(peaks)
     xxs, yys = ucb(peaks, gp_mu_sig)
     iterative_plot(peaks, xxs, yys,gp_mu_sig)
 
